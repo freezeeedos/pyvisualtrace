@@ -7,6 +7,8 @@ Visual Traceroute with gmt
 
 **Requirements:**
 
+*    traceroute
+*    gmt (with low-res coasts db)
 *    libmaxminddb
 *    GeoIP2-python
 *    maxminddb python extension
