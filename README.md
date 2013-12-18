@@ -9,6 +9,7 @@ Visual Traceroute with gmt
 
 *    traceroute
 *    gmt (with low-res coasts db)
+*    pygtk
 *    libmaxminddb
 *    GeoIP2-python
 *    maxminddb python extension
