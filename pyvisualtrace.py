@@ -47,20 +47,20 @@ class MyWindow(Gtk.Window):
 
         self.vbox.pack_start(self.frame_rgb, True, True, 0)
 
-        self.hbox = Gtk.Box(spacing=6)
-        self.vbox.pack_start(self.hbox, True, True, 0)
+        self.hbox = Gtk.Box(spacing=0)
+        self.vbox.pack_start(self.hbox, False, False, 0)
 
         self.entry = Gtk.Entry()
         self.entry.set_text("www.example.com")
-        self.hbox.pack_start(self.entry, True, True, 0)
+        self.hbox.pack_start(self.entry, True, True, 6)
 
 
         self.button1 = Gtk.Button(label="Trace")
         self.button1.connect("clicked", self.on_button_clicked)
-        self.hbox.pack_start(self.button1, True, True, 0)
+        self.hbox.pack_start(self.button1, False, False, 6)
 
         self.statusbar = Gtk.Statusbar()
-        self.vbox.pack_start(self.statusbar, True, True, 0)
+        self.vbox.pack_start(self.statusbar, False, False, 0)
 
     def on_button_clicked(self, widget):
         text = str(self.entry.get_text())
@@ -78,7 +78,6 @@ class MyWindow(Gtk.Window):
         print status_msg
         self.statusbar.push(self.statusbar.get_context_id("statusbar"), status_msg)
         self.img.set_from_file("result.jpg")
-        return
 
 def trace_route(host):
     output = subprocess.check_output(['traceroute', host])
