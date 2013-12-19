@@ -79,7 +79,7 @@ class MyWindow(Gtk.Window):
             trace_map()
             time.sleep(1)
             self.statusbar.push(self.statusbar.get_context_id("statusbar"), "done tracing " + str(text) + "   ")
-            self.img.set_from_file("result.jpg")
+            self.img.set_from_file("result.bmp")
             self.button1.set_sensitive(True)
             self.spinner.stop()
         except Exception:
@@ -133,12 +133,10 @@ def trace_map():
     ps_file.write(ps_points)
     ps_file.write(ps_start_stop)
     ps_file.close()
-    subprocess.call(['ps2raster', 'map.ps', '-Tj', '-A'])
-    image = Image.open("map.jpg")
-    width = 1024
-    height = 520
-    resized_img = image.resize((width, height), Image.ANTIALIAS)
-    resized_img.save("result.jpg")
+    subprocess.call(['ps2raster', 'map.ps', '-Tb', '-A'])
+    image = Image.open("map.bmp")
+    resized_img = image.resize((1024, 520), Image.ANTIALIAS)
+    resized_img.save("result.bmp")
 
 
 win = MyWindow()
