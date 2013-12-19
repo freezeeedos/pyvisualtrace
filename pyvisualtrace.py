@@ -127,7 +127,7 @@ def trace_map():
     ps_file = open("map.ps", "w")
     os.environ['PATH'] = "/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/gmt/bin"
     ps_map = subprocess.check_output(['pscoast', '-Rd', '-JN0/20c', '-Bg30', '-Dc', '-A10000', '-Ggray', '-P', '-X0.5c', '-Y10c', '-K'])
-    ps_lines = subprocess.check_output(['psxy', 'points.dat', '-O', '-Rd', '-JN', '-Dc', '-A10000', '-P', '-K'])
+    ps_lines = subprocess.check_output(['psxy', 'points.dat', '-O', '-Rd', '-JN', '-Dc', '-A10000', '-P', '-Wthick', '-K'])
     ps_points = subprocess.check_output(['psxy', 'points.dat', '-O', '-Rd', '-JN', '-Dc', '-A10000', '-P', '-Sc', '-G0', '-K'])
     ps_start_stop = subprocess.check_output(['psxy', 'start_stop.dat', '-O', '-Rd', '-JN', '-Dc', '-A10000', '-P', '-Sc0.05', '-G255/0/0'])
     ps_file.write(ps_map)
