@@ -64,6 +64,7 @@ class MyWindow(Gtk.Window):
 
     def on_button_clicked(self, widget):
         text = str(self.entry.get_text())
+        self.button1.set_sensitive(False)
         threading.Thread(target=self.worker_trace, args=(text, )).start()
 
     def worker_trace(self, text):
@@ -78,6 +79,7 @@ class MyWindow(Gtk.Window):
         print status_msg
         self.statusbar.push(self.statusbar.get_context_id("statusbar"), status_msg)
         self.img.set_from_file("result.jpg")
+        self.button1.set_sensitive(True)
 
 def trace_route(host):
     output = subprocess.check_output(['traceroute', host])
