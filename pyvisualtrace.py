@@ -50,6 +50,9 @@ class MyWindow(Gtk.Window):
         self.hbox = Gtk.Box(spacing=0)
         self.vbox.pack_start(self.hbox, False, False, 0)
 
+        self.spinner = Gtk.Spinner()
+        self.hbox.pack_start(self.spinner, False, True, 6)
+
         self.entry = Gtk.Entry()
         self.entry.set_text("www.example.com")
         self.hbox.pack_start(self.entry, True, True, 6)
@@ -65,11 +68,12 @@ class MyWindow(Gtk.Window):
     def on_button_clicked(self, widget):
         text = str(self.entry.get_text())
         self.button1.set_sensitive(False)
+        self.spinner.start()
+        self.statusbar.push(self.statusbar.get_context_id("statusbar"), "tracing " + str(text) + "...")
         threading.Thread(target=self.worker_trace, args=(text, )).start()
 
     def worker_trace(self, text):
         try:
-            self.statusbar.push(self.statusbar.get_context_id("statusbar"), "tracing " + str(text) + "...")
             ip_list = trace_route(str(text))
             locate_nodes(ip_list)
             trace_map()
@@ -77,9 +81,11 @@ class MyWindow(Gtk.Window):
             self.statusbar.push(self.statusbar.get_context_id("statusbar"), "done tracing " + str(text) + "   ")
             self.img.set_from_file("result.jpg")
             self.button1.set_sensitive(True)
+            self.spinner.stop()
         except Exception:
-            self.button1.set_sensitive(True)
             self.statusbar.push(self.statusbar.get_context_id("statusbar"), "Failed to trace " + str(text))
+            self.button1.set_sensitive(True)
+            self.spinner.stop()
             return
 
 def trace_route(host):
