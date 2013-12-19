@@ -68,18 +68,19 @@ class MyWindow(Gtk.Window):
         threading.Thread(target=self.worker_trace, args=(text, )).start()
 
     def worker_trace(self, text):
-        status_msg = "tracing " + str(text) + "..."
-        print status_msg
-        self.statusbar.push(self.statusbar.get_context_id("statusbar"), status_msg)
-        ip_list = trace_route(str(text))
-        locate_nodes(ip_list)
-        trace_map()
-        status_msg = "done tracing " + str(text) + "   "
-        time.sleep(1)
-        print status_msg
-        self.statusbar.push(self.statusbar.get_context_id("statusbar"), status_msg)
-        self.img.set_from_file("result.jpg")
-        self.button1.set_sensitive(True)
+        try:
+            self.statusbar.push(self.statusbar.get_context_id("statusbar"), "tracing " + str(text) + "...")
+            ip_list = trace_route(str(text))
+            locate_nodes(ip_list)
+            trace_map()
+            time.sleep(1)
+            self.statusbar.push(self.statusbar.get_context_id("statusbar"), "done tracing " + str(text) + "   ")
+            self.img.set_from_file("result.jpg")
+            self.button1.set_sensitive(True)
+        except Exception:
+            self.button1.set_sensitive(True)
+            self.statusbar.push(self.statusbar.get_context_id("statusbar"), "Failed to trace " + str(text))
+            return
 
 def trace_route(host):
     output = subprocess.check_output(['traceroute', host])
