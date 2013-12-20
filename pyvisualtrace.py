@@ -47,6 +47,16 @@ class MyWindow(Gtk.Window):
 
         self.vbox.pack_start(self.frame_rgb, True, True, 0)
 
+        self.hbox1 = Gtk.Box(spacing=0)
+        self.vbox.pack_start(self.hbox1, False, False, 0)
+
+        self.check_v4 = Gtk.RadioButton(None, "Use ipv4")
+        self.check_v6 = Gtk.RadioButton.new_from_widget(self.check_v4)
+        self.check_v6.set_label("Use ipv6")
+
+        self.hbox1.pack_start(self.check_v4, False, False, 6)
+        self.hbox1.pack_start(self.check_v6, False, False, 0)
+
         self.hbox = Gtk.Box(spacing=0)
         self.vbox.pack_start(self.hbox, False, False, 0)
 
@@ -66,15 +76,19 @@ class MyWindow(Gtk.Window):
         self.vbox.pack_start(self.statusbar, False, False, 0)
 
     def on_button_clicked(self, widget):
+        if self.check_v6.get_active():
+            ipv = 6
+        else:
+            ipv = 4
         text = str(self.entry.get_text())
         self.button1.set_sensitive(False)
         self.spinner.start()
-        self.statusbar.push(self.statusbar.get_context_id("statusbar"), "tracing " + str(text) + "...")
-        threading.Thread(target=self.worker_trace, args=(text, )).start()
+        self.statusbar.push(self.statusbar.get_context_id("statusbar"), "tracing " + str(text) + "... (IPv" + str(ipv) + ")")
+        threading.Thread(target=self.worker_trace, args=(text, ipv)).start()
 
-    def worker_trace(self, text):
+    def worker_trace(self, text, ipv):
         try:
-            ip_list = trace_route(str(text))
+            ip_list = trace_route(str(text), ipv)
             locate_nodes(ip_list)
             trace_map()
             time.sleep(1)
@@ -88,10 +102,16 @@ class MyWindow(Gtk.Window):
             self.spinner.stop()
             return
 
-def trace_route(host):
-    output = subprocess.check_output(['traceroute', host])
-    pattern = re.compile("\((\d+\.\d+\.\d+\.\d+)\)")
-    ip_list = pattern.findall(output)
+def trace_route(host, ipv):
+    if ipv == 6:
+        pattern = "\((.*:.*)\)"
+        traceroute = "traceroute6"
+    else:
+        pattern = "\((\d+\.\d+\.\d+\.\d+)\)"
+        traceroute = "traceroute"
+    output = subprocess.check_output([traceroute, host])
+    regexp = re.compile(pattern)
+    ip_list = regexp.findall(output)
     del ip_list[0]
     del ip_list[0]
     return ip_list
@@ -125,7 +145,7 @@ def locate_nodes(ip_list):
 
 def trace_map():
     ps_file = open("map.ps", "w")
-    os.environ['PATH'] = "/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/gmt/bin"
+    os.environ['PATH'] = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/gmt/bin"
     ps_map = subprocess.check_output(['pscoast', '-Rd', '-JN0/20c', '-Bg30', '-Dc', '-A10000', '-Ggray', '-P', '-X0.5c', '-Y10c', '-K'])
     ps_lines = subprocess.check_output(['psxy', 'points.dat', '-O', '-Rd', '-JN', '-Dc', '-A10000', '-P', '-Wthick', '-K'])
     ps_points = subprocess.check_output(['psxy', 'points.dat', '-O', '-Rd', '-JN', '-Dc', '-A10000', '-P', '-Sc', '-G0', '-K'])
