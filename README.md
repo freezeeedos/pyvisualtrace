@@ -3,6 +3,12 @@ pyvisualtrace
 
 Visual Traceroute with gmt
 
+ipV4:
+
+![Screenshot](https://raw.github.com/freezeeedos/pyvisualtrace/master/screenshot1.png)
+
+ipV6:
+
 ![Screenshot](https://raw.github.com/freezeeedos/pyvisualtrace/master/screenshot.png)
 
 **Requirements:**
