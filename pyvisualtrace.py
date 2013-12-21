@@ -122,7 +122,10 @@ def locate_nodes(ip_list):
     points_list = []
     reader = geoip2.database.Reader('GeoLite2-City.mmdb')
     for ip in ip_list:
-        response = reader.city(ip)
+        try:
+            response = reader.city(ip)
+        except Exception, e:
+            print str(e)
         if response != None:
             print ip
             output = '''    Country: %s
