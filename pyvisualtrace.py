@@ -124,10 +124,10 @@ def locate_nodes(ip_list):
     for ip in ip_list:
         try:
             response = reader.city(ip)
-        except Exception, e:
-            print str(e)
+        except Exception as e:
+            print(str(e))
         if response != None:
-            print ip
+            print(ip)
             output = '''    Country: %s
     City: %s
     Latitude: %s
@@ -139,7 +139,7 @@ def locate_nodes(ip_list):
             pts_output = '''%s %s 0.1\n''' % (response.location.longitude, response.location.latitude)
             points.write(pts_output)
             points_list.append(pts_output)
-            print output
+            print(output)
     stop = points_list.pop()
     start = points_list.pop(0)
     start_stop.write(str(start) + "\n" + str(stop))
