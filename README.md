@@ -28,6 +28,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 **NOTE:** tested with python 2.7 and GMT 4.5.7
 
+**This will NOT work with python 2.6**
+
 Hosted at:
 
 https://github.com/freezeeedos/pyvisualtrace
