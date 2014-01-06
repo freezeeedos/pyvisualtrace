@@ -20,9 +20,10 @@ ipV6:
 *    GeoIP2-python
 *    maxminddb python extension
 
+This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
+
 You can find all the info [here](https://github.com/maxmind)
 
-This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
 
 **ipV6** support is at country-level only for now
 
