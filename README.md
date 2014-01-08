@@ -16,13 +16,11 @@ ipV6:
 *    traceroute
 *    gmt (with low-res coasts db)
 *    python-gi
-*    libmaxminddb
-*    GeoIP2-python
-*    maxminddb python extension
+*    [libmaxminddb](https://github.com/maxmind/libmaxminddb)
+*    [GeoIP2-python](https://github.com/maxmind/GeoIP2-python)
+*    [maxminddb python extension](https://github.com/maxmind/MaxMind-DB-Reader-python)
 
 This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
-
-You can find all the info [here](https://github.com/maxmind)
 
 
 **ipV6** support is at country-level only for now
