@@ -96,6 +96,9 @@ class MyWindow(Gtk.Window):
             ip_list = trace_route(str(text), ipv)
             locate_nodes(ip_list)
             trace_map()
+            garbage = ["points.dat", "start_stop.dat", "map.ps", "map.bmp"]
+            for f in garbage:
+                os.remove(f)
         except Exception as e:
             print  str(e)
             self.statusbar.push(self.statusbar.get_context_id("statusbar"), "Failed to trace " + str(text))
@@ -106,12 +109,17 @@ class MyWindow(Gtk.Window):
     def update_image(self, text):
         while True:
             time.sleep(1)
-            if os.path.exists("result.bmp"):
-                self.img.set_from_file("result.bmp")
-                self.statusbar.push(self.statusbar.get_context_id("statusbar"), "done tracing " + str(text) + "   ")
-                self.button1.set_sensitive(True)
-                self.spinner.stop()
-                return
+            try:
+                with open("result.bmp"):
+                    time.sleep(1)
+                    self.img.set_from_file("result.bmp")
+                    self.statusbar.push(self.statusbar.get_context_id("statusbar"), "done tracing " + str(text) + "   ")
+                    self.button1.set_sensitive(True)
+                    self.spinner.stop()
+                    os.remove("result.bmp")
+                    return
+            except Exception:
+                continue
 
 def trace_route(host, ipv):
     if ipv == 6:
