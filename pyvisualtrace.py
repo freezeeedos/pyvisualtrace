@@ -98,7 +98,6 @@ class MyWindow(Gtk.Window):
             trace_map()
             time.sleep(1)
             self.statusbar.push(self.statusbar.get_context_id("statusbar"), "done tracing " + str(text) + "   ")
-            self.img.set_from_file("result.bmp")
             self.button1.set_sensitive(True)
             self.spinner.stop()
         except Exception as e:
