@@ -85,7 +85,7 @@ class MyWindow(Gtk.Window):
         self.spinner.start()
         self.statusbar.push(self.statusbar.get_context_id("statusbar"), "tracing " + str(text) + "... (IPv" + str(ipv) + ")")
         threading.Thread(target=self.worker_trace, args=(text, ipv)).start()
-        threading.Thread(target=self.update_image, args=()).start()
+        threading.Thread(target=self.update_image, args=(text, )).start()
 
     def worker_trace(self, text, ipv):
         try:
@@ -96,22 +96,21 @@ class MyWindow(Gtk.Window):
             ip_list = trace_route(str(text), ipv)
             locate_nodes(ip_list)
             trace_map()
-            time.sleep(1)
-            self.statusbar.push(self.statusbar.get_context_id("statusbar"), "done tracing " + str(text) + "   ")
-            self.button1.set_sensitive(True)
-            self.spinner.stop()
         except Exception as e:
             print  str(e)
             self.statusbar.push(self.statusbar.get_context_id("statusbar"), "Failed to trace " + str(text))
             self.button1.set_sensitive(True)
             self.spinner.stop()
-            return
+        return
 
-    def update_image(self):
+    def update_image(self, text):
         while True:
             time.sleep(1)
             if os.path.exists("result.bmp"):
                 self.img.set_from_file("result.bmp")
+                self.statusbar.push(self.statusbar.get_context_id("statusbar"), "done tracing " + str(text) + "   ")
+                self.button1.set_sensitive(True)
+                self.spinner.stop()
                 return
 
 def trace_route(host, ipv):
