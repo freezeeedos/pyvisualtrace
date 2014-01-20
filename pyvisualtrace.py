@@ -30,6 +30,8 @@ import geoip2.database
 import geoip2.models
 import geoip2.errors
 
+os.chdir(os.path.dirname(__file__))
+
 class MyWindow(Gtk.Window):
 
     def __init__(self):
