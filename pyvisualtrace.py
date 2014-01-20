@@ -30,7 +30,10 @@ import geoip2.database
 import geoip2.models
 import geoip2.errors
 
-os.chdir(os.path.dirname(__file__))
+
+const_work_dir = str(os.path.dirname(__file__)) + "/" + str(time.time())
+os.mkdir(const_work_dir)
+os.chdir(const_work_dir)
 
 class MyWindow(Gtk.Window):
 
@@ -40,7 +43,7 @@ class MyWindow(Gtk.Window):
         self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         self.add(self.vbox)
 
-        self.img = Gtk.Image.new_from_file("default.bmp")
+        self.img = Gtk.Image.new_from_file("../default.bmp")
 
         self.frame_rgb = Gtk.Frame(label='Map')
         self.frame_rgb.set_label_align(0.5, 0.5)
@@ -141,7 +144,7 @@ def locate_nodes(ip_list):
     points = open("points.dat", "w")
     start_stop = open("start_stop.dat", "w")
     points_list = []
-    reader = geoip2.database.Reader('GeoLite2-City.mmdb')
+    reader = geoip2.database.Reader("../GeoLite2-City.mmdb")
     for ip in ip_list:
         try:
             response = reader.city(ip)
