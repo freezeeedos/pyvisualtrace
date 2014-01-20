@@ -43,8 +43,7 @@ class MyWindow(Gtk.Window):
         self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         self.add(self.vbox)
 
-        default_img = str(sys.path[0]) + "/default.bmp"
-        self.img = Gtk.Image.new_from_file(default_img)
+        self.img = Gtk.Image.new_from_file(str(sys.path[0]) + "/default.bmp")
 
         self.frame_rgb = Gtk.Frame(label='Map')
         self.frame_rgb.set_label_align(0.5, 0.5)
