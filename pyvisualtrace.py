@@ -25,7 +25,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 '''
 
 from gi.repository import Gtk, Gdk, GLib
-import threading, subprocess, re, os, time, Image, sys
+import threading, subprocess, re, os, time, Image, sys, shutil
 import geoip2.database
 import geoip2.models
 import geoip2.errors
@@ -106,9 +106,13 @@ class MyWindow(Gtk.Window):
                 os.remove(f)
         except Exception as e:
             print  str(e)
+            shutil.copyfile(str(sys.path[0]) + "/failure.bmp", "./result.bmp")
             self.statusbar.push(self.statusbar.get_context_id("statusbar"), "Failed to trace " + str(text))
             self.button1.set_sensitive(True)
             self.spinner.stop()
+            return
+
+        self.statusbar.push(self.statusbar.get_context_id("statusbar"), "done tracing " + str(text) + "   ")
         return
 
     def update_image(self, text):
@@ -118,7 +122,6 @@ class MyWindow(Gtk.Window):
                 with open("result.bmp"):
                     time.sleep(1)
                     self.img.set_from_file("result.bmp")
-                    self.statusbar.push(self.statusbar.get_context_id("statusbar"), "done tracing " + str(text) + "   ")
                     self.button1.set_sensitive(True)
                     self.spinner.stop()
                     os.remove("result.bmp")
@@ -191,6 +194,8 @@ def trace_map():
 
 
 win = MyWindow()
+win.set_default_size(1024, 600)
+win.set_resizable(False)
 win.connect("delete-event", Gtk.main_quit)
 win.show_all()
 GLib.threads_init()
