@@ -40,8 +40,24 @@ class MyWindow(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Traceroute")
 
+        self.frame_log = Gtk.Frame(label='Nodes')
+        self.frame_log.set_label_align(0.5, 0.5)
+        self.frame_log.set_shadow_type(Gtk.ShadowType.IN)
+
+        self.hbox0 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        self.add(self.hbox0)
+
+        self.hbox0.pack_start(self.frame_log, True, True, 0)
+
+        self.scrolled_window = Gtk.ScrolledWindow()
+        self.frame_log.add(self.scrolled_window)
+        self.scrolled_window.set_size_request(400, -1)
+
+        self.textview = Gtk.TextView()
+        self.scrolled_window.add(self.textview)
+
         self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        self.add(self.vbox)
+        self.hbox0.pack_start(self.vbox, False, False, 6)
 
         self.img = Gtk.Image.new_from_file(str(sys.path[0]) + "/default.bmp")
 
@@ -93,13 +109,15 @@ class MyWindow(Gtk.Window):
         threading.Thread(target=self.update_image, args=(text, )).start()
 
     def worker_trace(self, text, ipv):
+        gtxtbuff = Gtk.TextBuffer()
         try:
             try:
                 os.remove("result.bmp")
             except Exception as e:
                 print str(e)
             ip_list = trace_route(str(text), ipv)
-            locate_nodes(ip_list)
+            nodes_log = locate_nodes(ip_list)
+            gtxtbuff.set_text(nodes_log)
             trace_map()
             garbage = ["points.dat", "start_stop.dat", "map.ps", "map.bmp"]
             for f in garbage:
@@ -112,6 +130,7 @@ class MyWindow(Gtk.Window):
             self.spinner.stop()
             return
 
+        self.textview.set_buffer(gtxtbuff)
         self.statusbar.push(self.statusbar.get_context_id("statusbar"), "done tracing " + str(text) + "   ")
         return
 
@@ -144,6 +163,7 @@ def trace_route(host, ipv):
     return ip_list
 
 def locate_nodes(ip_list):
+    output = ""
     points = open("points.dat", "w")
     start_stop = open("start_stop.dat", "w")
     points_list = []
@@ -154,24 +174,26 @@ def locate_nodes(ip_list):
         except Exception as e:
             print(str(e))
         if response != None:
-            print(ip)
-            output = '''    Country: %s
+            output += '''
+    %s
+    Country: %s
     City: %s
     Latitude: %s
     Longitude: %s
-        ''' % (response.country.iso_code,
+        ''' % (ip, response.country.iso_code,
             response.city.name,
             response.location.latitude,
             response.location.longitude)
             pts_output = '''%s %s 0.1\n''' % (response.location.longitude, response.location.latitude)
             points.write(pts_output)
             points_list.append(pts_output)
-            print(output)
     stop = points_list.pop()
     start = points_list.pop(0)
     start_stop.write(str(start) + "\n" + str(stop))
     start_stop.close()
     points.close()
+    print output
+    return output
 
 def trace_map():
     ps_file = open("map.ps", "w")
@@ -194,7 +216,6 @@ def trace_map():
 
 
 win = MyWindow()
-win.set_default_size(1024, 600)
 win.set_resizable(False)
 win.connect("delete-event", Gtk.main_quit)
 win.show_all()
