@@ -54,6 +54,8 @@ class MyWindow(Gtk.Window):
         self.scrolled_window.set_size_request(400, -1)
 
         self.textview = Gtk.TextView()
+        self.textview.set_editable(False)
+        self.textview.set_cursor_visible(False)
         self.scrolled_window.add(self.textview)
 
         self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
