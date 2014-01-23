@@ -69,6 +69,7 @@ class MyWindow(Gtk.Window):
         self.frame_rgb.add(self.img)
 
         self.vbox.pack_start(self.frame_rgb, True, True, 0)
+        self.frame_rgb.set_size_request(1024, 530)
 
         self.hbox1 = Gtk.Box(spacing=0)
         self.vbox.pack_start(self.hbox1, False, False, 0)
